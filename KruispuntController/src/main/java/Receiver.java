@@ -1,40 +1,34 @@
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-public class Receiver implements MqttCallback {
+public class Receiver extends Thread implements MqttCallback {
 
-    MqttClient client;
+    MqttClient receiverClient;
+    Controller controller;
+    String topic;
 
-    public Receiver(){
-
+    //Initialize controller and Topic
+    public Receiver(Controller mController, String mTopic){
+        controller = mController;
+        topic = mTopic;
     }
 
-    public static void main(String[] args) {
-        new Receiver().Listen();
-    }
-
-    public void Listen(){
-        String topic        = "1";
+    //Start Listening to topic
+    public void run(){
         String broker       = "tcp://broker.0f.nl:1883";
         String clientId     = "Listener";
         MemoryPersistence persistence = new MemoryPersistence();
-
         try {
-            client = new MqttClient(broker, clientId, persistence);
+            receiverClient = new MqttClient(broker, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
-            System.out.println("Connecting to broker: "+broker);
-            client.connect(connOpts);
-            client.setCallback(this);
-            client.subscribe(topic);
-            System.out.println("Connected");
+            System.out.println("Receiver connecting to broker: "+broker);
+            receiverClient.connect(connOpts);
+            receiverClient.setCallback(this);
+            receiverClient.subscribe(topic);
+            System.out.println("Receiver connected");
         } catch(MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
-            me.printStackTrace();
+            handleException(me);
         }
     }
 
@@ -43,14 +37,38 @@ public class Receiver implements MqttCallback {
         // TODO Auto-generated method stub
     }
 
+    //If message Arrived, do stuff
     @Override
     public void messageArrived(String topic, MqttMessage message)
             throws Exception {
-        System.out.println(message);
+        System.out.println("Ontvangen Topic:"+ topic);
+        System.out.println("Ontvangen bericht:"+ message.toString());
+        controller.messageArrived(topic, message.toString());
     }
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
         // TODO Auto-generated method stub
+    }
+
+    //Method to disconnect
+    public void disconnect(){
+        try{
+            receiverClient.disconnect();
+            System.out.println("receiver Disconnected");
+        }catch(MqttException me){
+
+            handleException(me);
+        }
+    }
+
+    //Method to handle exceptions
+    private void handleException(MqttException me){
+        System.out.println("reason "+me.getReasonCode());
+        System.out.println("msg "+me.getMessage());
+        System.out.println("loc "+me.getLocalizedMessage());
+        System.out.println("cause "+me.getCause());
+        System.out.println("excep "+me);
+        me.printStackTrace();
     }
 }

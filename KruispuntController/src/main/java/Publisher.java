@@ -5,48 +5,59 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class Publisher {
+    int qos             = 2;
+    String broker       = "tcp://broker.0f.nl:1883";
+    String clientId     = "1";
+    MqttClient publisherClient;
 
-    public static void main(String[] args) {
+    public Publisher(){
+        connect();
+    }
 
-        String topic        = "1";
-        String content      = "Message from MqttPublishSample";
-        int qos             = 2;
-        String broker       = "tcp://broker.0f.nl:1883";
-        String clientId     = "1";
+    //Connect with broker
+    public void connect(){
         MemoryPersistence persistence = new MemoryPersistence();
-
         try {
-            MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
+            publisherClient = new MqttClient(broker, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
-            System.out.println("Connecting to broker: "+broker);
-            sampleClient.connect(connOpts);
-            System.out.println("Connected");
-            for (int i = 0; i<5; i++){
-
-                System.out.println("Publishing message: "+content);
-                MqttMessage message = new MqttMessage(content.getBytes());
-                message.setQos(qos);
-                sampleClient.publish(topic, message);
-                System.out.println("Message published");
-                try {
-                    Thread.sleep(4000);
-                }
-                catch(Exception e){
-                    System.out.println("Ik wil niet slapen");
-                }
-            }
-            sampleClient.disconnect();
-            System.out.println("Disconnected");
-            System.exit(0);
-
+            System.out.println("Publisher Connecting to broker: "+broker);
+            publisherClient.connect(connOpts);
+            System.out.println("Publisher connected");
         } catch(MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
-            me.printStackTrace();
+            handleException(me);
         }
+    }
+
+    //Disconnect with the broker
+    public void disconnect(){
+        try{
+            publisherClient.disconnect();
+            System.out.println("publisher Disconnected");
+        }catch(MqttException me){
+            handleException(me);
+        }
+    }
+
+    //Send a message with topic and a message
+    public void sendMessage(String topic, MqttMessage message){
+        try{
+            System.out.println("Publishing message: "+message.toString());
+            publisherClient.publish(topic, message);
+            System.out.println("Message published");
+
+        }catch(MqttException me){
+            handleException(me);
+        }
+    }
+
+    //Method to handle exceptions
+    private void handleException(MqttException me){
+        System.out.println("reason "+me.getReasonCode());
+        System.out.println("msg "+me.getMessage());
+        System.out.println("loc "+me.getLocalizedMessage());
+        System.out.println("cause "+me.getCause());
+        System.out.println("excep "+me);
+        me.printStackTrace();
     }
 }
