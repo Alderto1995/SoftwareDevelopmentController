@@ -43,7 +43,7 @@ public class Receiver extends Thread implements MqttCallback {
             throws Exception {
         System.out.println("Ontvangen Topic:"+ topic);
         System.out.println("Ontvangen bericht:"+ message.toString());
-        controller.messageArrived(topic, message.toString());
+        controller.messageArrived(topic, message);
     }
 
     @Override

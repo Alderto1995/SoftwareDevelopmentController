@@ -4,8 +4,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-public class Publisher {
-    int qos             = 2;
+public class Publisher extends Thread {
+    int qos             = 1;
     String broker       = "tcp://broker.0f.nl:1883";
     String clientId     = "1";
     MqttClient publisherClient;
