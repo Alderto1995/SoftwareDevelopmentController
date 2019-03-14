@@ -43,6 +43,7 @@ public class Publisher extends Thread {
     public void sendMessage(String topic, MqttMessage message){
         try{
             System.out.println("Publishing message: "+message.toString());
+            System.out.println(topic);
             publisherClient.publish(topic, message);
             System.out.println("Message published");
 

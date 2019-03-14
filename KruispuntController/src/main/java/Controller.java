@@ -17,14 +17,15 @@ public class Controller {
     public void start(){
         messageCreator = new MessageCreator();
         messageTranslator = new MessageTranslator(this);
-        receiver = new Receiver(this, teamID + "/#");
+        receiver = new Receiver(this, teamID + "/+/+/sensor/+");
         receiver.start();
         publisher = new Publisher();
         publisher.start();
 
         //For testing purposes send a start signal
         sleep(1000);
-        publisher.sendMessage("1/motor_vehicle/1/sensor/1", messageCreator.createPayload("1"));
+        //publisher.sendMessage("1/motor_vehicle/1/light/1", messageCreator.createPayload("TestVanafAldertAlsStartSignaal"));
+        turnLightGreenEver4Seconds();
     }
 
     //Stop the threads and disconnect the Clients
@@ -41,7 +42,8 @@ public class Controller {
     //Do stuff if message arrived
     public void messageArrived(String topic, MqttMessage message){
         sleep(4000);
-        messageTranslator.recieveMessage(topic, message);
+        //publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1), messageCreator.createPayload("TestVanafAldertAlsReactiesOpSensor"));
+        //messageTranslator.recieveMessage(topic, message);
     }
 
 
@@ -60,5 +62,16 @@ public class Controller {
         publisher.sendMessage(messageCreator.turnLightOn(message),messageCreator.createPayload("1"));
         sleep(4000);
         publisher.sendMessage(messageCreator.turnLightOn(message),messageCreator.createPayload("0"));
+    }
+
+    public void turnLightGreenEver4Seconds(){
+        while(true){
+            sleep(4000);
+            publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1),messageCreator.createPayload("2"));
+            sleep(2000);
+            publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1),messageCreator.createPayload("1"));
+            sleep(2000);
+            publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1),messageCreator.createPayload("0"));
+        }
     }
 }
