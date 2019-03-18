@@ -3,14 +3,21 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import java.util.Timer;
 
 public class Publisher extends Thread {
+    public static Publisher instance;
+
     int qos             = 1;
     String broker       = "tcp://broker.0f.nl:1883";
     String clientId     = "1";
     MqttClient publisherClient;
+    Timer timer = new Timer();
 
     public Publisher(){
+        if(instance == null){
+            instance = this;
+        }
         connect();
     }
 

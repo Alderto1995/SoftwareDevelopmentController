@@ -7,12 +7,13 @@ public class Message {
     private String componentType;
     private int componentID;
     private int value;
-    Message(String[] message, MqttMessage mqttMessage){
-        teamID          = Integer.parseInt(message[0]);
-        userType        = message[1];
-        groupID         = Integer.parseInt(message[0]);
-        componentType   = message[3];
-        componentID     = Integer.parseInt(message[0]);
+    Message(String topic, MqttMessage mqttMessage){
+        String[] topics = topic.split("/");
+        teamID          = Integer.parseInt(topics[0]);
+        userType        = topics[1];
+        groupID         = Integer.parseInt(topics[2]);
+        componentType   = topics[3];
+        componentID     = Integer.parseInt(topics[4]);
         value           = Integer.parseInt(mqttMessage.toString());
     }
 

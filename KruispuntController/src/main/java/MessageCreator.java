@@ -3,13 +3,16 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MessageCreator {
     //<team_id>/<user_type>/<group_id>/<component_type>/<component_id>
     private int qos = 1;
+    public static MessageCreator instance;
     MessageCreator(){
-
+        if(instance == null){
+            instance = this;
+        }
     }
 
     //Create MqqtMessage with Payload
-    public MqttMessage createPayload(String payload){
-        MqttMessage message = new MqttMessage(payload.getBytes());
+    public MqttMessage createPayload(int payload){
+        MqttMessage message = new MqttMessage(Integer.toString(payload).getBytes());
         message.setQos(qos);
         return message;
     }

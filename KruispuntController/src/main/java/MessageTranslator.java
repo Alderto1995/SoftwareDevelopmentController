@@ -6,9 +6,8 @@ public class MessageTranslator {
         controller = mController;
     }
 
-    public void recieveMessage(String topic, MqttMessage mqttMessage){
-        String[] topics = topic.split("/");
-        Message message = new Message(topics, mqttMessage);
+    public void receiveMessage(String topic, MqttMessage mqttMessage){
+        Message message = new Message(topic, mqttMessage);
         switch(message.getComponentType()) {
             case "light":
                 aLightMessage(message);
