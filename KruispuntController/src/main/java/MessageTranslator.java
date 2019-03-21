@@ -55,7 +55,7 @@ public class MessageTranslator {
     }
 
     private void aMotorVehicleArrived(Message message){
-        controller.aMotorVehicleArrived(message);
+
     }
 
     private void aPublicServiceVehicleArrived(Message message){

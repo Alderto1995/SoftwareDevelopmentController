@@ -21,17 +21,12 @@ public class Controller {
     //start the Publisher & MessageCreator and start Receiver in different thread
     public void start()
     {
-        intersection = new Intersection(teamID);
         messageCreator = new MessageCreator();
-        messageTranslator = new MessageTranslator(this);
         receiver = new Receiver(this, teamID + "/+/+/sensor/+");
         receiver.start();
         publisher = new Publisher();
         publisher.start();
-
-        messageQue = new MessageQue();
-        messageQue.start();
-
+        intersection = new Intersection(teamID);
 
         //For testing purposes send a start signal
         //sleep(1000);
@@ -52,16 +47,10 @@ public class Controller {
 
     //Do stuff if message arrived
     public void messageArrived(String topic, MqttMessage message){
-        Message newMessage = new Message(topic, message);
-        TrafficLight trafficLight = intersection.getTrafficLights(newMessage.getGroupID());
-        trafficLight.increasePriority();
-
-        if(trafficLight.getStatusConflictingTrafficlights()){
-            aMotorVehicleArrived(newMessage);
-        }
+        intersection.update(new Message(topic, message));
         //sleep(4000);
         //publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1), messageCreator.createPayload("TestVanafAldertAlsReactiesOpSensor"));
-        messageTranslator.receiveMessage(topic, message);
+        //messageTranslator.receiveMessage(topic, message);
         //turnLightToGreen();
     }
 
@@ -73,29 +62,5 @@ public class Controller {
         catch(Exception e){
             System.out.println("Ik wil niet slapen");
         }
-    }
-
-    public void aMotorVehicleArrived(Message message){
-        publisher.sendMessage(messageCreator.turnLightOn(message),messageCreator.createPayload(2));
-        sleep(4000);
-        publisher.sendMessage(messageCreator.turnLightOn(message),messageCreator.createPayload(1));
-        sleep(4000);
-        publisher.sendMessage(messageCreator.turnLightOn(message),messageCreator.createPayload(0));
-    }
-
-    public void turnLightGreenEver4Seconds(){
-        while(true){
-            turnLightToGreen();
-            }
-    }
-
-    public void turnLightToGreen(){
-        sleep(4000);
-        publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1),messageCreator.createPayload(2));
-        sleep(2000);
-        publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1),messageCreator.createPayload(1));
-        sleep(2000);
-        publisher.sendMessage(messageCreator.createTopic(teamID,"motor_vehicle", 1, "light", 1),messageCreator.createPayload(0));
-
     }
 }

@@ -7,6 +7,8 @@ public class Message {
     private String componentType;
     private int componentID;
     private int value;
+    private String topic;
+
     Message(String topic, MqttMessage mqttMessage){
         String[] topics = topic.split("/");
         teamID          = Integer.parseInt(topics[0]);
@@ -15,6 +17,7 @@ public class Message {
         componentType   = topics[3];
         componentID     = Integer.parseInt(topics[4]);
         value           = Integer.parseInt(mqttMessage.toString());
+        this.topic = teamID + "/" + userType + "/" + groupID + "/" + componentType + "/+";
     }
 
     public int getTeamID(){return teamID;}
@@ -23,4 +26,7 @@ public class Message {
     public String getComponentType() {return componentType;}
     public int getComponentID() {return componentID;}
     public int getValue() {return value;}
+    public String getTopic(){
+        return topic;
+    }
 }
