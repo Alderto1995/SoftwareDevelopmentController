@@ -85,7 +85,9 @@ public class TrafficLight {
     }
 
     public void decreasePriority(){
-        priority--;
+        if(priority>0){
+            priority--;
+        }
     }
 
     public void increasePriority(){
