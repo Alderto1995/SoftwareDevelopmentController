@@ -1,31 +1,25 @@
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-public class Receiver extends Thread implements MqttCallback {
+import java.util.UUID;
 
-    MqttClient receiverClient;
-    Controller controller;
-    String topic;
+public class Receiver extends Communication implements MqttCallback {
 
-    //Initialize controller and Topic
-    public Receiver(Controller mController, String mTopic){
-        controller = mController;
-        topic = mTopic;
-    }
+    protected String sensorTopic;
 
-    //Start Listening to topic
-    public void run(){
-        String broker       = "tcp://broker.0f.nl:1883";
-        String clientId     = "Listener";
+    private MqttClient client;
+
+    protected void init(){
+        String clientId = UUID.randomUUID().toString();
         MemoryPersistence persistence = new MemoryPersistence();
         try {
-            receiverClient = new MqttClient(broker, clientId, persistence);
+            client = new MqttClient(broker, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
             System.out.println("Receiver connecting to broker: "+broker);
-            receiverClient.connect(connOpts);
-            receiverClient.setCallback(this);
-            receiverClient.subscribe(topic);
+            client.connect(connOpts);
+            client.setCallback(this);
+            client.subscribe(sensorTopic);
             System.out.println("Receiver connected");
         } catch(MqttException me) {
             handleException(me);
@@ -41,9 +35,8 @@ public class Receiver extends Thread implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message)
             throws Exception {
-        System.out.println("Ontvangen Topic:"+ topic);
-        System.out.println("Ontvangen bericht:"+ message.toString());
-        controller.messageArrived(topic, message);
+        System.out.println("Received topic:"+ topic);
+        System.out.println("Received message:"+ message.toString());
     }
 
     @Override
@@ -54,7 +47,7 @@ public class Receiver extends Thread implements MqttCallback {
     //Method to disconnect
     public void disconnect(){
         try{
-            receiverClient.disconnect();
+            client.disconnect();
             System.out.println("receiver Disconnected");
         }catch(MqttException me){
 

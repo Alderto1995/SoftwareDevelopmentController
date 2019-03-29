@@ -2,11 +2,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.paho.client.mqttv3.*;
 
-public class TrafficLight {
+public class TrafficLight extends Receiver {
 
     private String topic;
-    private String sensorTopic;
     private int status;
     private int groupID;
     private String userType;
@@ -17,7 +17,7 @@ public class TrafficLight {
     private int durationYellow;
     private int durationRed;
 
-    public TrafficLight(int teamID, int groupID, String userType){
+    public TrafficLight(int groupID, String userType){
         priority = 0;
         conflictingTrafficLights = new ArrayList<>();
         status = 0;
@@ -28,6 +28,7 @@ public class TrafficLight {
         durationGreen = 6;
         durationYellow = 3;
         durationRed = 4;
+        init();
     }
 
     public void update(){
@@ -55,7 +56,7 @@ public class TrafficLight {
 
     public void setStatus(int status) {
         this.status = status;
-        Publisher.instance.sendMessage(topic, MessageCreator.instance.createPayload(status));
+        Publisher.instance.sendMessage(topic, Publisher.instance.createPayload(status));
     }
 
     public int getStatus() {
@@ -94,7 +95,7 @@ public class TrafficLight {
         priority++;
     }
 
-    public int getPriority(){
+    public int getPriorityTL(){
         return priority;
     }
 
@@ -117,5 +118,18 @@ public class TrafficLight {
 
     public String getSensorTopic(){
         return sensorTopic;
+    }
+
+    public void messageArrived(String topic, MqttMessage message)
+            throws Exception {
+        System.out.println("Received Topic:"+ topic);
+        System.out.println("Received message:"+ message.toString());
+        int value = Integer.parseInt(message.toString());
+        if(value == 0){
+            decreasePriority();
+        }
+        else if(value == 1){
+            increasePriority();
+        }
     }
 }

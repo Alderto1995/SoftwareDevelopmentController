@@ -4,18 +4,18 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.util.Timer;
+import java.util.UUID;
 
-public class Publisher extends Thread {
+public class Publisher extends Communication {
     public static Publisher instance;
 
-    int qos             = 1;
-    String broker       = "tcp://broker.0f.nl:1883";
-    String clientId     = "1";
-    MqttClient publisherClient;
-    Timer timer = new Timer();
+    private int qos = 1;
+    private String clientId;
+    private MqttClient publisherClient;
 
     public Publisher(){
         if(instance == null){
+            clientId = UUID.randomUUID().toString();
             instance = this;
         }
         connect();
@@ -57,6 +57,13 @@ public class Publisher extends Thread {
         }catch(MqttException me){
             handleException(me);
         }
+    }
+
+    //Create MqqtMessage with Payload
+    public MqttMessage createPayload(int payload){
+        MqttMessage message = new MqttMessage(Integer.toString(payload).getBytes());
+        message.setQos(qos);
+        return message;
     }
 
     //Method to handle exceptions
