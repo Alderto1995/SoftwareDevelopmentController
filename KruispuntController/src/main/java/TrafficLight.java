@@ -11,18 +11,20 @@ public class TrafficLight extends Receiver {
     private int groupID;
     private String userType;
     private int priority;
+    private int componentID;
     private LocalDateTime endDate;
     List<TrafficLight> conflictingTrafficLights;
     private int durationGreen;
     private int durationYellow;
     private int durationRed;
 
-    public TrafficLight(int groupID, String userType){
+    public TrafficLight(String userType, int groupID, int componentID){
         priority = 0;
         conflictingTrafficLights = new ArrayList<>();
         status = 0;
         this.groupID = groupID;
         this.userType = userType;
+        this.componentID = componentID;
         topic = teamID+"/"+userType+"/"+groupID+"/light/1";
         sensorTopic = teamID+"/"+userType+"/"+groupID+"/sensor/+";
         durationGreen = 6;
@@ -31,7 +33,8 @@ public class TrafficLight extends Receiver {
         init();
     }
 
-    public void update(){
+    public void update(){// Per zoveel tijd de prioriteit omhoog zetten als de prioriteit al een tijdje op 1 of hoger staat (Elke 10 seconden ongeveer?)
+        //Bijgevoegde priotiteit moeten we bijhouden om de toegevoegde priotiteit weer te kunnen resetten.
         if(endDate != null){
             LocalDateTime now = LocalDateTime.now();
             long duration = Duration.between(now, endDate).getSeconds();
@@ -98,6 +101,10 @@ public class TrafficLight extends Receiver {
     public int getPriorityTL(){
         return priority;
     }
+
+    public int getComponentID(){ return componentID;}
+
+    public String getUserType() {return userType;}
 
     public boolean isConflicting(){
         for (TrafficLight tl : conflictingTrafficLights) {
