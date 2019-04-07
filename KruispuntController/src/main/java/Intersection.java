@@ -146,8 +146,7 @@ public class Intersection extends Thread {
                 TrafficLight tl = new TrafficLight(
                         eElement.getElementsByTagName("user_type").item(0).getTextContent(),
                         Integer.parseInt(eElement.getElementsByTagName("group_id").item(0).getTextContent()),
-                        Integer.parseInt(eElement.getElementsByTagName("component_id").item(0).getTextContent()),
-                        Boolean.parseBoolean((eElement.getElementsByTagName("grouped").item(0).getTextContent())));
+                        Integer.parseInt(eElement.getElementsByTagName("component_id").item(0).getTextContent()));
                 trafficLights.add(tl);
             }
         }

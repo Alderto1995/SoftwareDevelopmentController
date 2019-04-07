@@ -26,7 +26,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
+            <state relative-caret-position="255">
               <caret line="17" selection-start-line="17" selection-end-line="17" />
               <folding>
                 <element signature="e#174#175#0" expanded="true" />
@@ -53,12 +53,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Intersection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="228" column="42" lean-forward="true" selection-start-line="228" selection-start-column="42" selection-end-line="228" selection-end-column="42" />
-              <folding>
-                <element signature="e#12091#12092#0" expanded="true" />
-                <element signature="e#12118#12119#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="75">
+              <caret line="136" lean-forward="true" selection-start-line="136" selection-end-line="136" />
             </state>
           </provider>
         </entry>
@@ -75,21 +71,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/TrafficLight.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="98" column="5" lean-forward="true" selection-start-line="98" selection-start-column="5" selection-end-line="98" selection-end-column="5" />
+            <state relative-caret-position="136">
+              <caret line="74" column="41" lean-forward="true" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
               <folding>
-                <element signature="e#1983#1984#0" expanded="true" />
-                <element signature="e#2041#2042#0" expanded="true" />
+                <element signature="e#2388#2389#0" expanded="true" />
                 <element signature="e#2417#2418#0" expanded="true" />
+                <element signature="e#3329#3330#0" expanded="true" />
                 <element signature="e#3359#3360#0" expanded="true" />
-                <element signature="e#2905#2906#0" expanded="true" />
-                <element signature="e#2931#2932#0" expanded="true" />
-                <element signature="e#2964#2965#0" expanded="true" />
-                <element signature="e#2995#2996#0" expanded="true" />
-                <element signature="e#3535#3536#0" expanded="true" />
-                <element signature="e#3569#3570#0" expanded="true" />
-                <element signature="e#3677#3678#0" expanded="true" />
-                <element signature="e#3713#3714#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -98,8 +86,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/XMLTrafficLight.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="640" column="44" lean-forward="true" selection-start-line="640" selection-start-column="44" selection-end-line="640" selection-end-column="44" />
+            <state relative-caret-position="136">
+              <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -140,10 +128,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-12" />
-    <option name="y" value="-12" />
-    <option name="width" value="1940" />
-    <option name="height" value="1100" />
+    <option name="x" value="-13" />
+    <option name="y" value="-13" />
+    <option name="width" value="1942" />
+    <option name="height" value="1101" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -151,6 +139,36 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+            </path>
+            <path>
+              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="Controller" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+            </path>
+            <path>
+              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="Controller" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="main" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+            </path>
+            <path>
+              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="Controller" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="main" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -179,36 +197,6 @@
             <path>
               <item name="Controller" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
-            <path>
-              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-            </path>
-            <path>
-              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-              <item name="Controller" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-            </path>
-            <path>
-              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-              <item name="Controller" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-              <item name="main" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-            </path>
-            <path>
-              <item name="Controller" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="Kruispunt" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-              <item name="Controller" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-              <item name="main" type="2674bda8:ScopeViewTreeModel$GroupNode" />
-              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -277,8 +265,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1563" height="845" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12707917" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12840985" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -358,7 +347,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Intersection.java</url>
-          <line>192</line>
+          <line>191</line>
           <properties />
           <option name="timeStamp" value="2" />
         </line-breakpoint>
@@ -412,19 +401,9 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/TeamId.form" />
     <entry file="file://$PROJECT_DIR$/src/main/java/XMLParser.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/XMLTrafficLight - kopie.xml" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/Receiver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="39" column="5" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
+        <state relative-caret-position="255">
           <caret line="17" selection-start-line="17" selection-end-line="17" />
           <folding>
             <element signature="e#174#175#0" expanded="true" />
@@ -435,10 +414,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/XMLTrafficLight.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Receiver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="640" column="44" lean-forward="true" selection-start-line="640" selection-start-column="44" selection-end-line="640" selection-end-column="44" />
+        <state relative-caret-position="612">
+          <caret line="39" column="5" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -449,34 +431,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/XMLTrafficLight.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Intersection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="228" column="42" lean-forward="true" selection-start-line="228" selection-start-column="42" selection-end-line="228" selection-end-column="42" />
-          <folding>
-            <element signature="e#12091#12092#0" expanded="true" />
-            <element signature="e#12118#12119#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="75">
+          <caret line="136" lean-forward="true" selection-start-line="136" selection-end-line="136" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/TrafficLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="98" column="5" lean-forward="true" selection-start-line="98" selection-start-column="5" selection-end-line="98" selection-end-column="5" />
+        <state relative-caret-position="136">
+          <caret line="74" column="41" lean-forward="true" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
           <folding>
-            <element signature="e#1983#1984#0" expanded="true" />
-            <element signature="e#2041#2042#0" expanded="true" />
+            <element signature="e#2388#2389#0" expanded="true" />
             <element signature="e#2417#2418#0" expanded="true" />
+            <element signature="e#3329#3330#0" expanded="true" />
             <element signature="e#3359#3360#0" expanded="true" />
-            <element signature="e#2905#2906#0" expanded="true" />
-            <element signature="e#2931#2932#0" expanded="true" />
-            <element signature="e#2964#2965#0" expanded="true" />
-            <element signature="e#2995#2996#0" expanded="true" />
-            <element signature="e#3535#3536#0" expanded="true" />
-            <element signature="e#3569#3570#0" expanded="true" />
-            <element signature="e#3677#3678#0" expanded="true" />
-            <element signature="e#3713#3714#0" expanded="true" />
           </folding>
         </state>
       </provider>

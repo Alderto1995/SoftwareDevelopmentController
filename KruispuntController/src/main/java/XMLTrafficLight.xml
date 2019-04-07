@@ -5,104 +5,89 @@
       <group_id>1</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>2</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>3</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>4</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>5</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>true</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>5</group_id>
       <component_type>light</component_type>
       <component_id>2</component_id>
-      <grouped>true</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>6</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>7</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>true</grouped>
    </TrafficLight><TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>7</group_id>
       <component_type>light</component_type>
       <component_id>2</component_id>
-      <grouped>true</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>8</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>9</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>10</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>true</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>10</group_id>
       <component_type>light</component_type>
       <component_id>2</component_id>
-      <grouped>true</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>motor_vehicle</user_type>
       <group_id>11</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
    <TrafficLight>
       <user_type>cycle</user_type>
       <group_id>1</group_id>
       <component_type>light</component_type>
       <component_id>1</component_id>
-      <grouped>false</grouped>
    </TrafficLight>
 
 

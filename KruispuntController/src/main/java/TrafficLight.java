@@ -20,7 +20,7 @@ public class TrafficLight extends Receiver {
     private TrafficLight coupledLight;
     private String componentType;
 
-    public TrafficLight(String userType, int groupID, int componentID, boolean grouped){
+    public TrafficLight(String userType, int groupID, int componentID){
         priority = 0;
         conflictingTrafficLights = new ArrayList<>();
         status = 0;
@@ -28,14 +28,7 @@ public class TrafficLight extends Receiver {
         this.userType = userType;
         this.componentID = componentID;
         componentType = "light";
-
-        if(grouped == true){
-            topic = teamID+"/"+userType+"/"+groupID+"/"+componentType;
-        }
-        else{
-            topic = teamID+"/"+userType+"/"+groupID+"/"+componentType+"/1";
-        }
-
+        topic = teamID+"/"+userType+"/"+groupID+"/"+componentType+"/"+componentID;
         sensorTopic = teamID+"/"+userType+"/"+groupID+"/sensor/+";
         durationGreen = 6;
         durationYellow = 3;
@@ -89,22 +82,12 @@ public class TrafficLight extends Receiver {
 
     public void turnLightYellow() {
         setStatus(1);
-        if(coupledLight != null){
-            if(coupledLight.status != 1){
-                coupledLight.turnLightGreen();
-            }
-        }
         endDate = LocalDateTime.now().plusSeconds(durationYellow);
         update();
     }
 
     public void turnLightRed(){
         setStatus(0);
-        if(coupledLight != null){
-            if(coupledLight.status != 0){
-                coupledLight.turnLightGreen();
-            }
-        }
         endDate = LocalDateTime.now().plusSeconds(durationRed);
         update();
     }
@@ -142,7 +125,7 @@ public class TrafficLight extends Receiver {
     }
 
     public boolean isAvailable(){
-        if(isConflicting() || status > 0){
+        if(isConflicting() || endDate != null){
             return false;
         }
         else{
