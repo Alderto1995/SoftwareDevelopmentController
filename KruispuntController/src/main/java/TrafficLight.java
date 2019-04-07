@@ -17,15 +17,25 @@ public class TrafficLight extends Receiver {
     private int durationGreen;
     private int durationYellow;
     private int durationRed;
+    private TrafficLight coupledLight;
+    private String componentType;
 
-    public TrafficLight(String userType, int groupID, int componentID){
+    public TrafficLight(String userType, int groupID, int componentID, boolean grouped){
         priority = 0;
         conflictingTrafficLights = new ArrayList<>();
         status = 0;
         this.groupID = groupID;
         this.userType = userType;
         this.componentID = componentID;
-        topic = teamID+"/"+userType+"/"+groupID+"/light/1";
+        componentType = "light";
+
+        if(grouped == true){
+            topic = teamID+"/"+userType+"/"+groupID+"/"+componentType;
+        }
+        else{
+            topic = teamID+"/"+userType+"/"+groupID+"/"+componentType+"/1";
+        }
+
         sensorTopic = teamID+"/"+userType+"/"+groupID+"/sensor/+";
         durationGreen = 6;
         durationYellow = 3;
@@ -68,18 +78,33 @@ public class TrafficLight extends Receiver {
 
     public void turnLightGreen(){
         setStatus(2);
+        if(coupledLight != null){
+            if(coupledLight.status != 2){
+                coupledLight.turnLightGreen();
+            }
+        }
         endDate = LocalDateTime.now().plusSeconds(durationGreen);
         update();
     }
 
     public void turnLightYellow() {
         setStatus(1);
+        if(coupledLight != null){
+            if(coupledLight.status != 1){
+                coupledLight.turnLightGreen();
+            }
+        }
         endDate = LocalDateTime.now().plusSeconds(durationYellow);
         update();
     }
 
     public void turnLightRed(){
         setStatus(0);
+        if(coupledLight != null){
+            if(coupledLight.status != 0){
+                coupledLight.turnLightGreen();
+            }
+        }
         endDate = LocalDateTime.now().plusSeconds(durationRed);
         update();
     }
@@ -106,6 +131,8 @@ public class TrafficLight extends Receiver {
 
     public String getUserType() {return userType;}
 
+    public String getComponentType(){return componentType;}
+
     public boolean isConflicting(){
         for (TrafficLight tl : conflictingTrafficLights) {
             if(tl.getStatus() == 1 || tl.getStatus() == 2)
@@ -115,7 +142,7 @@ public class TrafficLight extends Receiver {
     }
 
     public boolean isAvailable(){
-        if(isConflicting() || endDate != null){
+        if(isConflicting() || status > 0){
             return false;
         }
         else{
@@ -125,6 +152,10 @@ public class TrafficLight extends Receiver {
 
     public String getSensorTopic(){
         return sensorTopic;
+    }
+
+    public void groupedWith(TrafficLight light){
+        coupledLight = light;
     }
 
     public void messageArrived(String topic, MqttMessage message)

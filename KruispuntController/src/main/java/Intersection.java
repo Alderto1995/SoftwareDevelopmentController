@@ -1,3 +1,4 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,6 +26,7 @@ public class Intersection extends Thread {
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
             initTrafficLights(doc.getElementsByTagName("TrafficLight"));
             initConflictingTrafficLights(doc.getElementsByTagName("Conflict"));
+            iniGroupTrafficLights(doc.getElementsByTagName("GroupLight"));
             System.out.println("Klaar met conficlterende kruispunen");
         }catch (Exception e) {
             e.printStackTrace();
@@ -144,7 +146,8 @@ public class Intersection extends Thread {
                 TrafficLight tl = new TrafficLight(
                         eElement.getElementsByTagName("user_type").item(0).getTextContent(),
                         Integer.parseInt(eElement.getElementsByTagName("group_id").item(0).getTextContent()),
-                        Integer.parseInt(eElement.getElementsByTagName("component_id").item(0).getTextContent()));
+                        Integer.parseInt(eElement.getElementsByTagName("component_id").item(0).getTextContent()),
+                        Boolean.parseBoolean((eElement.getElementsByTagName("grouped").item(0).getTextContent())));
                 trafficLights.add(tl);
             }
         }
@@ -210,6 +213,27 @@ public class Intersection extends Thread {
             }
         }
         return null;
+    }
+
+    private void iniGroupTrafficLights(NodeList nList) {
+        for (int temp = 0; temp < nList.getLength(); temp++) {
+            Node nNode = nList.item(temp);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) nNode;
+                int groupid = Integer.parseInt(eElement.getElementsByTagName("group_id").item(0).getTextContent());
+                String usertype = eElement.getElementsByTagName("user_type").item(0).getTextContent();
+                String componenttype = eElement.getElementsByTagName("component_type").item(0).getTextContent();
+                List<TrafficLight> lights = new ArrayList<>();
+                for (TrafficLight light : trafficLights) {
+                    if (light.getGroupID() == groupid && light.getUserType().equals(usertype) && light.getComponentType().equals(componenttype)) {
+                        lights.add(light);
+                    }
+                }
+                //niet netjes, moet later verbeterd worden.
+                lights.get(0).groupedWith(lights.get(1));
+                lights.get(1).groupedWith(lights.get(0));
+            }
+        }
     }
 
     public void run(){
