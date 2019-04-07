@@ -31,7 +31,7 @@ public class TrafficLight extends Receiver {
         topic = teamID+"/"+userType+"/"+groupID+"/"+componentType+"/"+componentID;
         sensorTopic = teamID+"/"+userType+"/"+groupID+"/sensor/+";
         durationGreen = 6;
-        durationYellow = 3;
+        durationYellow = 5;
         durationRed = 4;
         init();
     }
