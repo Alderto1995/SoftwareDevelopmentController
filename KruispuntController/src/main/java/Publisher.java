@@ -49,10 +49,10 @@ public class Publisher extends Communication {
     //Send a message with topic and a message
     public void sendMessage(String topic, MqttMessage message){
         try{
-            System.out.println("Publishing message: "+message.toString());
-            System.out.println(topic);
+            System.out.println("\tPublishing message: \t"+topic+"\t"+message.toString());
+            //System.out.println();
             publisherClient.publish(topic, message);
-            System.out.println("Message published");
+            //System.out.println("Message published");
 
         }catch(MqttException me){
             handleException(me);

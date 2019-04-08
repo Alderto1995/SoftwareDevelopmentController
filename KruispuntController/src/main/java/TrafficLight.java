@@ -13,10 +13,12 @@ public class TrafficLight extends Receiver {
     private int priority;
     private int componentID;
     private LocalDateTime endDate;
+    private LocalDateTime firstCar;
     List<TrafficLight> conflictingTrafficLights;
     private int durationGreen;
     private int durationYellow;
     private int durationRed;
+    private boolean longWaiting;
     private TrafficLight coupledLight;
     private String componentType;
 
@@ -24,15 +26,16 @@ public class TrafficLight extends Receiver {
         priority = 0;
         conflictingTrafficLights = new ArrayList<>();
         status = 0;
+        longWaiting = false;
         this.groupID = groupID;
         this.userType = userType;
         this.componentID = componentID;
         componentType = "light";
         topic = teamID+"/"+userType+"/"+groupID+"/"+componentType+"/"+componentID;
         sensorTopic = teamID+"/"+userType+"/"+groupID+"/sensor/+";
-        durationGreen = 6;
-        durationYellow = 5;
-        durationRed = 4;
+        durationGreen = 5;
+        durationYellow = 3;
+        durationRed = 2;
         init();
     }
 
@@ -40,9 +43,16 @@ public class TrafficLight extends Receiver {
         //Bijgevoegde priotiteit moeten we bijhouden om de toegevoegde priotiteit weer te kunnen resetten.
         if(endDate != null){
             LocalDateTime now = LocalDateTime.now();
-            long duration = Duration.between(now, endDate).getSeconds();
-
-            if(duration <= 0){
+            //long duration = Duration.between(now, endDate).getSeconds();
+            if(firstCar != null ){
+                if(Duration.between(firstCar, now).getSeconds() > 20){
+                    longWaiting = true;
+                    priority++;
+                    System.out.println("Dit stoplicht wacht al heel lang!"+topic);
+                }
+            }
+            //Is dit ook te schrijven met now.isAfter(endDate)
+            if(now.isAfter(endDate)){
                 if(status == 2){
                     turnLightYellow();
                 }
@@ -77,6 +87,9 @@ public class TrafficLight extends Receiver {
             }
         }
         endDate = LocalDateTime.now().plusSeconds(durationGreen);
+        priority = 0;
+        longWaiting = false;
+        firstCar = null;
         update();
     }
 
@@ -103,6 +116,9 @@ public class TrafficLight extends Receiver {
     }
 
     public void increasePriority(){
+        if(firstCar == null){
+            firstCar = LocalDateTime.now();
+        }
         priority++;
     }
 
@@ -124,13 +140,18 @@ public class TrafficLight extends Receiver {
         return false;
     }
 
+    public boolean isWaitingLong(){
+        return longWaiting;
+    }
+
     public boolean isAvailable(){
-        if(isConflicting() || endDate != null){
+        if(endDate != null){
             return false;
         }
-        else{
-            return true;
+        if(isConflicting() ){
+            return false;
         }
+        return true;
     }
 
     public String getSensorTopic(){
@@ -143,8 +164,8 @@ public class TrafficLight extends Receiver {
 
     public void messageArrived(String topic, MqttMessage message)
             throws Exception {
-        System.out.println("Received Topic:"+ topic);
-        System.out.println("Received message:"+ message.toString());
+        System.out.println("Received Topic: \t"+ topic +"\t"+ message.toString());
+        //System.out.println("Received message:");
         int value = Integer.parseInt(message.toString());
         if(value == 0){
             decreasePriority();
