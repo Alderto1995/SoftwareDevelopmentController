@@ -27,7 +27,7 @@ public class Intersection extends Thread {
             initTrafficLights(doc.getElementsByTagName("TrafficLight"));
             initConflictingTrafficLights(doc.getElementsByTagName("Conflict"));
             iniGroupTrafficLights(doc.getElementsByTagName("GroupLight"));
-            System.out.println("Klaar met conficlterende kruispunen");
+            System.out.println("Klaar met conflicterende kruispunten");
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,9 +106,7 @@ public class Intersection extends Thread {
 
             for(TrafficLight tl : trafficLights){
                 tl.update();
-                if(tl.isWaitingLong()){
-                    highestPriorityLight = tl;
-                }
+
                 if(tl.isAvailable() && tl.getPriorityTL() != 0){
                     if(highestPriorityLight == null){
                         highestPriorityLight = tl;
