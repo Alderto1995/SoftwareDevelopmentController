@@ -22,6 +22,7 @@ public class TrafficLight extends Receiver {
     private TrafficLight coupledLight;
     private String componentType;
     private int localIncrease;
+    private boolean isHighestPriority;
 
     public TrafficLight(String userType, int groupID, int componentID){
         priority = 0;
@@ -42,9 +43,9 @@ public class TrafficLight extends Receiver {
     }
 
     public void update(){// Per zoveel tijd de prioriteit omhoog zetten als de prioriteit al een tijdje op 1 of hoger staat (Elke 10 seconden ongeveer?)
-        //Bijgevoegde priotiteit moeten we bijhouden om de toegevoegde priotiteit weer te kunnen resetten.
+        //Bijgevoegde priotiteit moeten we bijhouden om de toegevoegte priotiteit weer te kunnen resetten.
         LocalDateTime now = LocalDateTime.now();
-
+        System.out.println("Stoplicht: "+ topic + "\t Prioriteit: "+priority+ "\t Kleur: "+status + " HighestPriority " + isHighestPriority );
         if(priority > 0 && waitingTime == null){
             waitingTime = LocalDateTime.now();
         }
@@ -67,7 +68,6 @@ public class TrafficLight extends Receiver {
                 }
                 else if(status == 0){
                     endDate = null;
-                    removeLocalPriority();
                 }
             }
         }
@@ -93,8 +93,10 @@ public class TrafficLight extends Receiver {
                 coupledLight.turnLightGreen();
             }
         }
+        isHighestPriority = false;
+        removeLocalPriority();
         endDate = LocalDateTime.now().plusSeconds(durationGreen);
-        priority = 0;
+        //priority = 0;
         update();
     }
 
@@ -146,7 +148,7 @@ public class TrafficLight extends Receiver {
 
     public boolean isConflicting(){
         for (TrafficLight tl : conflictingTrafficLights) {
-            if(tl.getStatus() == 1 || tl.getStatus() == 2)
+            if(tl.getStatus() == 1 || tl.getStatus() == 2 || tl.getIsHighestPriority())
                 return true;
         }
         return false;
@@ -167,10 +169,17 @@ public class TrafficLight extends Receiver {
         coupledLight = light;
     }
 
+    public void setHighestPriority(){
+        isHighestPriority = true;
+    }
+
+    public boolean getIsHighestPriority(){
+        return isHighestPriority;
+    }
+
     public void messageArrived(String topic, MqttMessage message)
             throws Exception {
-        System.out.println("Received Topic: \t"+ topic +"\t"+ message.toString());
-        //System.out.println("Received message:");
+        //System.out.println("Received Topic: \t"+ topic +"\t"+ message.toString());
         int value = Integer.parseInt(message.toString());
         if(value == 0){
             decreasePriority();

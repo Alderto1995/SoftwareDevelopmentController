@@ -35,7 +35,7 @@ public class Receiver extends Communication implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message)
             throws Exception {
-        System.out.println("Received topic:"+ topic + message.toString());
+        //System.out.println("Received topic:"+ topic + message.toString());
         //System.out.println("Received message:"+ message.toString());
     }
 

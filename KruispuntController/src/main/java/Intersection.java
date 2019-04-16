@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Intersection extends Thread {
     private List<TrafficLight> trafficLights;
+    private TrafficLight ultimateHighestPriority;
     private boolean stop;
 
     public Intersection(){
@@ -103,10 +104,48 @@ public class Intersection extends Thread {
     public void run(){
         while(!stop){
             TrafficLight highestPriorityLight = null;
+            //Update all TrafficLights
+            for(TrafficLight tl: trafficLights){
+                tl.update();
+            }
+            if(ultimateHighestPriority != null){
+                if(ultimateHighestPriority.isAvailable()){
+                    ultimateHighestPriority.turnLightGreen();
+                    ultimateHighestPriority = null;
+                }
+            }
 
             for(TrafficLight tl : trafficLights){
-                tl.update();
+                if(tl.getPriorityTL() != 0){
+                    if(highestPriorityLight == null){
+                        highestPriorityLight = tl;
+                    }
+                    else{
+                        int priority = tl.getPriorityTL();
+                        if(priority > highestPriorityLight.getPriorityTL()){
+                            highestPriorityLight = tl;
+                        }
+                    }
 
+                }
+            }
+            if(highestPriorityLight != null){
+                if(highestPriorityLight.getPriorityTL() >= 6){
+                    if(ultimateHighestPriority == null){
+                        highestPriorityLight.setHighestPriority();
+                        ultimateHighestPriority = highestPriorityLight;
+                    }
+                }
+            }
+
+            if(highestPriorityLight != null){
+                if(highestPriorityLight.isAvailable()){
+                    highestPriorityLight.turnLightGreen();
+                }
+            }
+            //Test if this is needed
+            //Search Highest trafficLight Priority
+            for(TrafficLight tl : trafficLights){
                 if(tl.isAvailable() && tl.getPriorityTL() != 0){
                     if(highestPriorityLight == null){
                         highestPriorityLight = tl;
@@ -120,13 +159,14 @@ public class Intersection extends Thread {
                 }
             }
 
+
             if(highestPriorityLight != null){
                 if(highestPriorityLight.isAvailable()){
                     highestPriorityLight.turnLightGreen();
                 }
             }
             try {//Voor opbouw van de ram
-                Thread.sleep(0);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
