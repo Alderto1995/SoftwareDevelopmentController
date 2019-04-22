@@ -22,7 +22,7 @@ public class TrafficLight extends Receiver {
     private TrafficLight coupledLight;
     private String componentType;
     private int localIncrease;
-    private boolean isHighestPriority;
+    private boolean markNextGroup;
 
     public TrafficLight(String userType, int groupID, int componentID){
         priority = 0;
@@ -39,13 +39,39 @@ public class TrafficLight extends Receiver {
         durationRed = 4;
         durationWaiting = 10;
         localIncrease = 0;
+        markNextGroup = false;
         init();
+    }
+
+    private void setStatus(int status) {
+        this.status = status;
+        Publisher.instance.sendMessage(topic, Publisher.instance.createPayload(status));
+    }
+
+    private void decreasePriority(){
+        if(priority>0){
+            priority--;
+        }
+    }
+
+    private void increasePriority(){
+        priority++;
+    }
+
+    private void increaseLocalPriority(){
+        priority++;
+        localIncrease++;
+    }
+
+    private void removeLocalPriority(){
+        priority -= localIncrease;
+        localIncrease = 0;
     }
 
     public void update(){// Per zoveel tijd de prioriteit omhoog zetten als de prioriteit al een tijdje op 1 of hoger staat (Elke 10 seconden ongeveer?)
         //Bijgevoegde priotiteit moeten we bijhouden om de toegevoegte priotiteit weer te kunnen resetten.
         LocalDateTime now = LocalDateTime.now();
-        System.out.println("Stoplicht: "+ topic + "\t Prioriteit: "+priority+ "\t Kleur: "+status + " HighestPriority " + isHighestPriority );
+        //System.out.println("Stoplicht: "+ topic + "\t Prioriteit: "+priority+ "\t Kleur: "+status + " HighestPriority " + isHighestPriority );
         if(priority > 0 && waitingTime == null){
             waitingTime = LocalDateTime.now();
         }
@@ -77,11 +103,6 @@ public class TrafficLight extends Receiver {
         conflictingTrafficLights.add(trafficLight);
     }
 
-    private void setStatus(int status) {
-        this.status = status;
-        Publisher.instance.sendMessage(topic, Publisher.instance.createPayload(status));
-    }
-
     public int getStatus() {
         return status;
     }
@@ -93,10 +114,9 @@ public class TrafficLight extends Receiver {
                 coupledLight.turnLightGreen();
             }
         }
-        isHighestPriority = false;
         removeLocalPriority();
         endDate = LocalDateTime.now().plusSeconds(durationGreen);
-        //priority = 0;
+        markNextGroup = false;
         update();
     }
 
@@ -116,26 +136,6 @@ public class TrafficLight extends Receiver {
         return groupID;
     }
 
-    private void decreasePriority(){
-        if(priority>0){
-            priority--;
-        }
-    }
-
-    private void increasePriority(){
-        priority++;
-    }
-
-    private void increaseLocalPriority(){
-        priority++;
-        localIncrease++;
-    }
-
-    private void removeLocalPriority(){
-        priority -= localIncrease;
-        localIncrease = 0;
-    }
-
     public int getPriorityTL(){
         return priority;
     }
@@ -146,16 +146,24 @@ public class TrafficLight extends Receiver {
 
     public String getComponentType(){return componentType;}
 
+    public void markForNextGroup(){
+        markNextGroup = true;
+    }
+
+    public boolean isMarkedNextGroup(){
+        return markNextGroup;
+    }
+
     public boolean isConflicting(){
         for (TrafficLight tl : conflictingTrafficLights) {
-            if(tl.getStatus() == 1 || tl.getStatus() == 2 || tl.getIsHighestPriority())
+            if(tl.getStatus() == 1 || tl.getStatus() == 2 || tl.isMarkedNextGroup())
                 return true;
         }
         return false;
     }
 
     public boolean isAvailable(){
-        if(endDate != null || isConflicting()){
+        if(endDate != null || isConflicting() || markNextGroup){
             return false;
         }
         return true;
@@ -167,14 +175,6 @@ public class TrafficLight extends Receiver {
 
     public void groupedWith(TrafficLight light){
         coupledLight = light;
-    }
-
-    public void setHighestPriority(){
-        isHighestPriority = true;
-    }
-
-    public boolean getIsHighestPriority(){
-        return isHighestPriority;
     }
 
     public void messageArrived(String topic, MqttMessage message)
