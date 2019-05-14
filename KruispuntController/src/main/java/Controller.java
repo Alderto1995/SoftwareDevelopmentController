@@ -1,6 +1,7 @@
 public class Controller {
     private Publisher publisher;
     private Intersection intersection;
+    private Bridge bridge;
 
     public Controller(){
 
@@ -16,6 +17,8 @@ public class Controller {
         publisher.start();
         intersection = new Intersection();
         intersection.start();
+        bridge = new Bridge();
+        bridge.start();
     }
 
     //Stop the threads and disconnect the Clients

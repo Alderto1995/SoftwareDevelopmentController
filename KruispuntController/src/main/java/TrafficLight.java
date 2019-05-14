@@ -4,23 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.paho.client.mqttv3.*;
 
-public class TrafficLight extends Receiver {
+public class TrafficLight extends PriorityLight {
 
-    private String topic;
-    private int status;
-    private int groupID;
-    private String userType;
-    private int priority;
-    private int componentID;
+
+
     private LocalDateTime endDate;
     private LocalDateTime waitingTime;
-    List<TrafficLight> conflictingTrafficLights;
     private int durationGreen;
     private int durationYellow;
     private int durationRed;
     private int durationWaiting;
     private TrafficLight coupledLight;
-    private String componentType;
     private int localIncrease;
     private boolean markNextGroup;
 
@@ -32,7 +26,7 @@ public class TrafficLight extends Receiver {
         this.userType = userType;
         this.componentID = componentID;
         componentType = "light";
-        topic = teamID+"/"+userType+"/"+groupID+"/"+componentType+"/"+componentID;
+        topic = "/"+userType+"/"+groupID+"/"+componentType+"/"+componentID;
         sensorTopic = teamID+"/"+userType+"/"+groupID+"/sensor/+";
         durationGreen = 8;
         durationYellow = 4;
@@ -43,10 +37,7 @@ public class TrafficLight extends Receiver {
         init();
     }
 
-    private void setStatus(int status) {
-        this.status = status;
-        Publisher.instance.sendMessage(topic, Publisher.instance.createPayload(status));
-    }
+
 
     private void decreasePriority(){
         if(priority>0){
@@ -68,10 +59,8 @@ public class TrafficLight extends Receiver {
         localIncrease = 0;
     }
 
-    public void update(){// Per zoveel tijd de prioriteit omhoog zetten als de prioriteit al een tijdje op 1 of hoger staat (Elke 10 seconden ongeveer?)
-        //Bijgevoegde priotiteit moeten we bijhouden om de toegevoegte priotiteit weer te kunnen resetten.
+    public void update(){
         LocalDateTime now = LocalDateTime.now();
-        //System.out.println("Stoplicht: "+ topic + "\t Prioriteit: "+priority+ "\t Kleur: "+status + " HighestPriority " + isHighestPriority );
         if(priority > 0 && waitingTime == null){
             waitingTime = LocalDateTime.now();
         }
@@ -83,8 +72,6 @@ public class TrafficLight extends Receiver {
         }
 
         if(endDate != null){
-            //long duration = Duration.between(now, endDate).getSeconds();
-            //Is dit ook te schrijven met now.isAfter(endDate)
             if(now.isAfter(endDate)){
                 if(status == 2){
                     turnLightYellow();
@@ -99,13 +86,6 @@ public class TrafficLight extends Receiver {
         }
     }
 
-    public void addConflictingTrafficLight(TrafficLight trafficLight){
-        conflictingTrafficLights.add(trafficLight);
-    }
-
-    public int getStatus() {
-        return status;
-    }
 
     public void turnLightGreen(){
         setStatus(2);
@@ -179,7 +159,6 @@ public class TrafficLight extends Receiver {
 
     public void messageArrived(String topic, MqttMessage message)
             throws Exception {
-        //System.out.println("Received Topic: \t"+ topic +"\t"+ message.toString());
         int value = Integer.parseInt(message.toString());
         if(value == 0){
             decreasePriority();

@@ -51,7 +51,7 @@ public class Publisher extends Communication {
         try{
             //System.out.println("\tPublishing message: \t"+topic+"\t"+message.toString());
             //System.out.println();
-            publisherClient.publish(topic, message);
+            publisherClient.publish(teamID+topic, message);
             //System.out.println("Message published");
 
         }catch(MqttException me){
