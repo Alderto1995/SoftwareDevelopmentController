@@ -8,6 +8,7 @@ public class Sensor extends Receiver {
     }
 
     public void messageArrived(String topic, MqttMessage message) throws Exception{
+        System.out.println("Deck sensor"+message);
         int value = Integer.parseInt(message.toString());
         this.value = value;
     }

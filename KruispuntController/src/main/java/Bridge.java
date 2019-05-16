@@ -8,7 +8,7 @@ public class Bridge extends Thread {
     private String tlBridgeLightTopic = "/bridge/1/light/1";
     private String gateBridgeTopic1 = "/bridge/1/gate/1";
     private String gateBridgeTopic2 = "/bridge/1/gate/2";
-    private String bridgeTopic = "/bridge/1/bridge/1";
+    private String bridgeTopic = "/bridge/1/deck/1";
     private BoatLight boatLight1 = new BoatLight("vessel",1,1);
     private BoatLight boatLight2 = new BoatLight("vessel",2,1);
     private LocalDateTime timeSinceBridgeOpened;
@@ -35,7 +35,7 @@ public class Bridge extends Thread {
 
                 } else if (boatLight2.getPriorityBL()) {
                     firstBoatLightToOpen = boatLight2;
-                    secondBoatLightToOpen = boatLight2;
+                    secondBoatLightToOpen = boatLight1;
                 }
             }
             if(Duration.between(timeSinceBridgeOpened,LocalDateTime.now()).getSeconds() >= timeToWaitForNextBridgeOpening){
@@ -51,42 +51,66 @@ public class Bridge extends Thread {
 
 
     private void openBridge(){
-        Publisher.instance.sendMessage(tlBridgeLightTopic,Publisher.instance.createPayload(2));
+        System.out.println("Beginnen met brug opnenen Zet licht op rood");
+        Publisher.instance.sendMessage(tlBridgeLightTopic,Publisher.instance.createPayload(0));
         wait(waitingTimeTl);
-        Publisher.instance.sendMessage(gateBridgeTopic1, Publisher.instance.createPayload(1));
+        System.out.println("Check tot deck leeg is");
+
         while(deckSensor.value == 1){
+            System.out.println(deckSensor.value);
             wait(100);
         }
+        System.out.println("Open slagboom");
+        Publisher.instance.sendMessage(gateBridgeTopic1, Publisher.instance.createPayload(1));
+        System.out.println("Zet tweede slagbomen dicht");
         Publisher.instance.sendMessage(gateBridgeTopic2, Publisher.instance.createPayload(1));
         wait(waitingTimeGate);
+
+        System.out.println("opene de brug");
         Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(1));
         wait(waitingTimeBridge);
+
+        System.out.println("Laat eerste brug licht aangaan");
         firstBoatLightToOpen.turnLightGreen();
-        while(firstBoatLightToOpen.status == 1){
+        while(firstBoatLightToOpen.status == 2){
             firstBoatLightToOpen.update();
+            wait(100);
+            //System.out.println("Status first light: "+ firstBoatLightToOpen.status);
         }
         while(boatSensor.value == 1){
             wait(100);
+            System.out.println("Boatsensor value: " +boatSensor.value);
         }
+        System.out.println("");
         if(secondBoatLightToOpen.getPriorityBL()){
             secondBoatLightToOpen.turnLightGreen();
+            System.out.println("Boatsensor value: " +secondBoatLightToOpen.getPriorityBL());
         }
-        while(secondBoatLightToOpen.status == 1){
+        System.out.println("Als sensor 0 is dan kan de brug dicht");
+        while(secondBoatLightToOpen.status == 2){
             secondBoatLightToOpen.update();
+            wait(100);
+            //System.out.println("Second boat light status: " +secondBoatLightToOpen.status);
         }
+        System.out.println("Als sensor 0 is dan kan de brug dicht");
         while(boatSensor.value == 1){
             wait(100);
+            System.out.println("Boatsensor value: " +boatSensor.value);
         }
         closeBridge();
     }
 
     private void closeBridge(){
+        System.out.println("Brug dicht doen");
+        Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(0));
+        wait(waitingTimeBridge);
+        System.out.println("Slagbomen open doen");
         Publisher.instance.sendMessage(gateBridgeTopic1, Publisher.instance.createPayload(0));
         Publisher.instance.sendMessage(gateBridgeTopic2, Publisher.instance.createPayload(0));
         wait(waitingTimeGate);
-        Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(0));
-        wait(waitingTimeBridge);
-        Publisher.instance.sendMessage(tlBridgeLightTopic, Publisher.instance.createPayload(0));
+        System.out.println("Stoplichten op groen doen");
+        Publisher.instance.sendMessage(tlBridgeLightTopic, Publisher.instance.createPayload(2));
+        timeSinceBridgeOpened=LocalDateTime.now();
     }
 
 

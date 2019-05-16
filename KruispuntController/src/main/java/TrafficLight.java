@@ -17,6 +17,7 @@ public class TrafficLight extends PriorityLight {
     private TrafficLight coupledLight;
     private int localIncrease;
     private boolean markNextGroup;
+    public boolean trafficIsJammed = false;
 
     public TrafficLight(String userType, int groupID, int componentID){
         priority = 0;
@@ -62,7 +63,7 @@ public class TrafficLight extends PriorityLight {
     public void update(){
         LocalDateTime now = LocalDateTime.now();
         if(priority > 0 && waitingTime == null){
-            waitingTime = LocalDateTime.now();
+            waitingTime = now;
         }
         else if(waitingTime != null){
             if(Duration.between(waitingTime, now).getSeconds() >= durationWaiting){
@@ -143,7 +144,7 @@ public class TrafficLight extends PriorityLight {
     }
 
     public boolean isAvailable(){
-        if(endDate != null || isConflicting() || markNextGroup){
+        if(endDate != null || isConflicting() || markNextGroup || trafficIsJammed){
             return false;
         }
         return true;
@@ -157,8 +158,7 @@ public class TrafficLight extends PriorityLight {
         coupledLight = light;
     }
 
-    public void messageArrived(String topic, MqttMessage message)
-            throws Exception {
+    public void messageArrived(String topic, MqttMessage message) {
         int value = Integer.parseInt(message.toString());
         if(value == 0){
             decreasePriority();

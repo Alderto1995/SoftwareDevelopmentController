@@ -48,6 +48,7 @@ public class BoatLight extends PriorityLight{
             if(timeSinceLow != null){
                 if(Duration.between(timeSinceLow, LocalDateTime.now()).getSeconds() >= timeToWaitForNextVessel){
                     turnLightRed();
+                    System.out.println("Zet bootlicht op rood");
                 }
             }
         }

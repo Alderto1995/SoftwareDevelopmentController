@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Intersection extends Thread {
     private List<TrafficLight> trafficLights;
-    //private TrafficLight ultimateHighestPriority;
+    private List<Sensor> TrafficJammedSensors;
     private boolean stop;
 
     public Intersection(){
@@ -28,6 +28,7 @@ public class Intersection extends Thread {
             initTrafficLights(doc.getElementsByTagName("TrafficLight"));
             initConflictingTrafficLights(doc.getElementsByTagName("Conflict"));
             iniGroupTrafficLights(doc.getElementsByTagName("GroupLight"));
+            initTrafficJammedSensor();
             System.out.println("Klaar met conflicterende kruispunten");
         }catch (Exception e) {
             e.printStackTrace();
@@ -66,6 +67,16 @@ public class Intersection extends Thread {
             tl1.addConflictingTrafficLight(tl2);
             tl2.addConflictingTrafficLight(tl1);
         }
+    }
+
+    private void initTrafficJammedSensor(){
+        RoadJammedSensor trafficSensor = new RoadJammedSensor("motor_vehicle", 1);
+        for (TrafficLight tl: trafficLights) {
+            if(tl.groupID == 3 ||tl.groupID == 7 ||tl.groupID == 10){
+                trafficSensor.addConflictingTrafficLight(tl);
+            }
+        }
+        TrafficJammedSensors.add(trafficSensor);
     }
 
     private TrafficLight searchTrafficLight(String userType, int groupID, int componentID){
