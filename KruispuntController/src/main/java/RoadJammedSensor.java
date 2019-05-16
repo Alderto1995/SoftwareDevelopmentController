@@ -1,11 +1,13 @@
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoadJammedSensor extends Sensor {
     private List<TrafficLight> conflictingTrafficLights;
     public RoadJammedSensor(String userType, int groupID) {
         super(userType, groupID);
+        conflictingTrafficLights = new ArrayList<>();
     }
 
     public void addConflictingTrafficLight(TrafficLight trafficLight){
@@ -13,7 +15,7 @@ public class RoadJammedSensor extends Sensor {
     }
 
     public void messageArrived(String topic, MqttMessage message) throws Exception{
-        System.out.println("Deck sensor"+message);
+        System.out.println("RoadJammedSensor sensor"+message);
         int value = Integer.parseInt(message.toString());
         boolean roadJammed;
         if(value == 1){

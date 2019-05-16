@@ -12,26 +12,28 @@ public class TrafficLight extends PriorityLight {
     private LocalDateTime waitingTime;
     private int durationGreen;
     private int durationYellow;
-    private int durationRed;
+    //private int durationRed;
+    private int evacuationTime;
     private int durationWaiting;
     private TrafficLight coupledLight;
     private int localIncrease;
     private boolean markNextGroup;
     public boolean trafficIsJammed = false;
 
-    public TrafficLight(String userType, int groupID, int componentID){
+    public TrafficLight(String userType, int groupID, int componentID, int evacuationTime){
         priority = 0;
         conflictingTrafficLights = new ArrayList<>();
         status = 0;
         this.groupID = groupID;
         this.userType = userType;
         this.componentID = componentID;
+        this.evacuationTime = evacuationTime;
         componentType = "light";
         topic = "/"+userType+"/"+groupID+"/"+componentType+"/"+componentID;
         sensorTopic = teamID+"/"+userType+"/"+groupID+"/sensor/+";
         durationGreen = 8;
         durationYellow = 4;
-        durationRed = 4;
+        //durationRed = 4;
         durationWaiting = 10;
         localIncrease = 0;
         markNextGroup = false;
@@ -80,9 +82,9 @@ public class TrafficLight extends PriorityLight {
                 else if(status == 1){
                     turnLightRed();
                 }
-                else if(status == 0){
-                    endDate = null;
-                }
+//                else if(status == 0){
+//                    endDate = null;
+//                }
             }
         }
     }
@@ -109,13 +111,15 @@ public class TrafficLight extends PriorityLight {
 
     public void turnLightRed(){
         setStatus(0);
-        endDate = LocalDateTime.now().plusSeconds(durationRed);
+        endDate = null;
         update();
     }
 
     public int getGroupID() {
         return groupID;
     }
+
+    public int getTotalTime(){return evacuationTime+durationGreen+durationYellow;}
 
     public int getPriorityTL(){
         return priority;

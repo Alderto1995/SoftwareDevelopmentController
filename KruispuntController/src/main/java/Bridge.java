@@ -82,6 +82,7 @@ public class Bridge extends Thread {
             System.out.println("Boatsensor value: " +boatSensor.value);
         }
         System.out.println("");
+        wait(1000);
         if(secondBoatLightToOpen.getPriorityBL()){
             secondBoatLightToOpen.turnLightGreen();
             System.out.println("Boatsensor value: " +secondBoatLightToOpen.getPriorityBL());

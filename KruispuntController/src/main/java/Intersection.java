@@ -1,4 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -7,17 +6,21 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Intersection extends Thread {
     private List<TrafficLight> trafficLights;
-    private List<Sensor> TrafficJammedSensors;
+    private List<Sensor> trafficJammedSensors;
     private boolean stop;
+    private LocalDateTime waitingTime;
 
     public Intersection(){
 
         trafficLights = new ArrayList<>();
+        trafficJammedSensors = new ArrayList<>();
+        waitingTime = LocalDateTime.now();
         try {
             File inputFile = new File("src/main/java/XMLTrafficLight.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -44,7 +47,8 @@ public class Intersection extends Thread {
                 TrafficLight tl = new TrafficLight(
                         eElement.getElementsByTagName("user_type").item(0).getTextContent(),
                         Integer.parseInt(eElement.getElementsByTagName("group_id").item(0).getTextContent()),
-                        Integer.parseInt(eElement.getElementsByTagName("component_id").item(0).getTextContent()));
+                        Integer.parseInt(eElement.getElementsByTagName("component_id").item(0).getTextContent()),
+                        Integer.parseInt(eElement.getElementsByTagName("evacuationTime").item(0).getTextContent()));
                 trafficLights.add(tl);
             }
         }
@@ -70,13 +74,13 @@ public class Intersection extends Thread {
     }
 
     private void initTrafficJammedSensor(){
-        RoadJammedSensor trafficSensor = new RoadJammedSensor("motor_vehicle", 1);
+        RoadJammedSensor trafficSensor = new RoadJammedSensor("motor_vehicle", 14);
         for (TrafficLight tl: trafficLights) {
             if(tl.groupID == 3 ||tl.groupID == 7 ||tl.groupID == 10){
                 trafficSensor.addConflictingTrafficLight(tl);
             }
         }
-        TrafficJammedSensors.add(trafficSensor);
+        trafficJammedSensors.add(trafficSensor);
     }
 
     private TrafficLight searchTrafficLight(String userType, int groupID, int componentID){
@@ -124,7 +128,7 @@ public class Intersection extends Thread {
                 }
             }
 
-            if(!waitForNextGroup){
+            if(!waitForNextGroup && LocalDateTime.now().isAfter(waitingTime)){
                 boolean stopLoop = false;
                 while(!stopLoop){
                     TrafficLight highestPriorityLight = null;
@@ -154,6 +158,7 @@ public class Intersection extends Thread {
                 for(TrafficLight tl : nextBatchLights){
                     tl.turnLightGreen();
                 }
+                checkEvacuationTime(nextBatchLights);
             }
 
             try {//Voor opbouw van de ram
@@ -162,6 +167,15 @@ public class Intersection extends Thread {
                 e.printStackTrace();
             }
         }//Evalueren priotiteiten dingetje
+    }
+
+    private void checkEvacuationTime(List<TrafficLight> nextBatch){
+        waitingTime = LocalDateTime.now();
+        for (TrafficLight tl: nextBatch) {
+            if(waitingTime.isBefore(LocalDateTime.now().plusSeconds(tl.getTotalTime()))){
+                waitingTime = LocalDateTime.now().plusSeconds(tl.getTotalTime());
+            }
+        }
     }
 
     public void stopThread(){
