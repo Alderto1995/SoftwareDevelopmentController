@@ -39,6 +39,18 @@ public class Intersection extends Thread {
         stop = false;
     }
 
+    @Override
+    public synchronized void start() {
+        sendInitialState();
+        super.start();
+    }
+
+    private void sendInitialState(){
+        for(TrafficLight tl: trafficLights){
+            tl.sendStatus();
+        }
+    }
+
     private void initTrafficLights(NodeList nList){
         for (int temp = 0; temp < nList.getLength(); temp++) {
             Node nNode = nList.item(temp);

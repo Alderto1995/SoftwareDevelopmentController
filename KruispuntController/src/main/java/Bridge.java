@@ -46,7 +46,20 @@ public class Bridge extends Thread {
         }
     }
 
+    @Override
+    public synchronized void start() {
+        sendInitialState();
+        super.start();
+    }
 
+    public void sendInitialState(){
+        Publisher.instance.sendMessage(tlBridgeLightTopic,Publisher.instance.createPayload(2));
+        boatLight1.sendStatus();
+        boatLight2.sendStatus();
+        Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(1));
+        Publisher.instance.sendMessage(gateBridgeTopic1, Publisher.instance.createPayload(0));
+        Publisher.instance.sendMessage(gateBridgeTopic2, Publisher.instance.createPayload(0));
+    }
 
 
 
@@ -54,20 +67,21 @@ public class Bridge extends Thread {
         System.out.println("Beginnen met brug opnenen Zet licht op rood");
         Publisher.instance.sendMessage(tlBridgeLightTopic,Publisher.instance.createPayload(0));
         wait(waitingTimeTl);
-        System.out.println("Check tot deck leeg is");
+        System.out.println("Open slagboom");
+        Publisher.instance.sendMessage(gateBridgeTopic1, Publisher.instance.createPayload(1));
 
+        System.out.println("Check tot deck leeg is");
         while(deckSensor.value == 1){
             System.out.println(deckSensor.value);
             wait(100);
         }
-        System.out.println("Open slagboom");
-        Publisher.instance.sendMessage(gateBridgeTopic1, Publisher.instance.createPayload(1));
+
         System.out.println("Zet tweede slagbomen dicht");
         Publisher.instance.sendMessage(gateBridgeTopic2, Publisher.instance.createPayload(1));
         wait(waitingTimeGate);
 
-        System.out.println("opene de brug");
-        Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(1));
+        System.out.println("open de brug");
+        Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(0));
         wait(waitingTimeBridge);
 
         System.out.println("Laat eerste brug licht aangaan");
@@ -87,7 +101,7 @@ public class Bridge extends Thread {
             secondBoatLightToOpen.turnLightGreen();
             System.out.println("Boatsensor value: " +secondBoatLightToOpen.getPriorityBL());
         }
-        System.out.println("Als sensor 0 is dan kan de brug dicht");
+        System.out.println("Als Licht van de boot rood is kunnen we verder");
         while(secondBoatLightToOpen.status == 2){
             secondBoatLightToOpen.update();
             wait(100);
@@ -103,7 +117,7 @@ public class Bridge extends Thread {
 
     private void closeBridge(){
         System.out.println("Brug dicht doen");
-        Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(0));
+        Publisher.instance.sendMessage(bridgeTopic,Publisher.instance.createPayload(1));
         wait(waitingTimeBridge);
         System.out.println("Slagbomen open doen");
         Publisher.instance.sendMessage(gateBridgeTopic1, Publisher.instance.createPayload(0));
@@ -126,28 +140,5 @@ public class Bridge extends Thread {
     public void stopThread(){
         stop = true;
     }
-
-
-
-
-
-    //Is er een boot?
-    //Is de cooldown tijd voorbij?
-        //Ja:
-            //Lichten rood
-            //6 seconden wachten)
-            //Eerste  2 slagbomen dicht (Duurt 4 seconden)
-                //Wacht tot brug leeg is
-                    //Andere 2 slagbomen dicht (Duurt 4 seconden)
-                    //Brug open (Duurt 10 seconden)
-                        //Lichten aan 1 kant op groen
-                            //Boten erlangs
-                        //Lihcten aan andere kant  op groen
-                            //boten erlangs
-
-                        //Brug dicht (Duurt 10 seconden)
-                        //Alle slagbomen open (Duurt 4 seconden)
-                        //Lichten groen
-
-        //Nee: (Overnieuw)
+    
 }

@@ -59,6 +59,24 @@ public class Publisher extends Communication {
         }
     }
 
+    public void sendMessage(String topic){
+        try{
+            //System.out.println("\tPublishing message: \t"+topic+"\t"+message.toString());
+            //System.out.println();
+            publisherClient.publish(teamID+topic,createMessageWithoutPayload());
+            //System.out.println("Message published");
+
+        }catch(MqttException me){
+            handleException(me);
+        }
+    }
+
+    public MqttMessage createMessageWithoutPayload(){
+        MqttMessage message = new MqttMessage();
+        message.setQos(qos);
+        return message;
+    }
+
     //Create MqqtMessage with Payload
     public MqttMessage createPayload(int payload){
         MqttMessage message = new MqttMessage(Integer.toString(payload).getBytes());
